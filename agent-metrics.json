@@ -1,0 +1,118 @@
+{
+  "uptimeMs": 299952,
+  "totalMethods": 11,
+  "totalInvocations": 220,
+  "totalErrors": 16,
+  "methods": {
+    "com.thun.javaagent.Test#processOrder": {
+      "callCount": 10,
+      "totalTimeMs": 1844.044,
+      "avgTimeMs": 184.404,
+      "minTimeMs": 118.362,
+      "maxTimeMs": 339.478,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#generateReport": {
+      "callCount": 6,
+      "totalTimeMs": 1443.932,
+      "avgTimeMs": 240.655,
+      "minTimeMs": 228.341,
+      "maxTimeMs": 251.227,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#compute": {
+      "callCount": 46,
+      "totalTimeMs": 5.243,
+      "avgTimeMs": 0.114,
+      "minTimeMs": 0.008,
+      "maxTimeMs": 0.375,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#finalizeOrder": {
+      "callCount": 10,
+      "totalTimeMs": 258.980,
+      "avgTimeMs": 25.898,
+      "minTimeMs": 16.146,
+      "maxTimeMs": 38.035,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#validateOrder": {
+      "callCount": 10,
+      "totalTimeMs": 0.414,
+      "avgTimeMs": 0.041,
+      "minTimeMs": 0.015,
+      "maxTimeMs": 0.190,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#networkCall": {
+      "callCount": 19,
+      "totalTimeMs": 2612.447,
+      "avgTimeMs": 137.497,
+      "minTimeMs": 20.066,
+      "maxTimeMs": 247.462,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#slowOperation": {
+      "callCount": 7,
+      "totalTimeMs": 1066.625,
+      "avgTimeMs": 152.375,
+      "minTimeMs": 127.788,
+      "maxTimeMs": 184.268,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#riskyPayment": {
+      "callCount": 30,
+      "totalTimeMs": 0.432,
+      "avgTimeMs": 0.014,
+      "minTimeMs": 0.001,
+      "maxTimeMs": 0.068,
+      "errorCount": 9,
+      "errorRate": 0.3000,
+      "lastException": "java.lang.RuntimeException"
+    },
+    "com.thun.javaagent.Test#hello": {
+      "callCount": 30,
+      "totalTimeMs": 0.869,
+      "avgTimeMs": 0.029,
+      "minTimeMs": 0.010,
+      "maxTimeMs": 0.108,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#databaseQuery": {
+      "callCount": 22,
+      "totalTimeMs": 2604.632,
+      "avgTimeMs": 118.392,
+      "minTimeMs": 83.181,
+      "maxTimeMs": 147.018,
+      "errorCount": 0,
+      "errorRate": 0.0000,
+      "lastException": ""
+    },
+    "com.thun.javaagent.Test#unreliableService": {
+      "callCount": 30,
+      "totalTimeMs": 0.179,
+      "avgTimeMs": 0.006,
+      "minTimeMs": 0.001,
+      "maxTimeMs": 0.044,
+      "errorCount": 7,
+      "errorRate": 0.2333,
+      "lastException": "java.lang.IllegalStateException"
+    }
+  }
+}
