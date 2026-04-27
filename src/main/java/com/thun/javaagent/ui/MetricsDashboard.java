@@ -37,14 +37,20 @@ import java.util.prefs.Preferences;
  * <p>
  * Tabs:
  * <ol>
- *   <li><b>All Methods</b> — full metrics table with search, column sorting, color-coded status</li>
- *   <li><b>Slow Methods</b> — methods exceeding the configurable slow threshold</li>
- *   <li><b>Errors</b> — methods that have thrown exceptions, with last exception type</li>
- *   <li><b>Call Traces</b> — JTree visualisation of recent parent→child call trees</li>
- *   <li><b>Configuration</b> — runtime agent config controls (enable/disable, threshold)</li>
+ * <li><b>All Methods</b> — full metrics table with search, column sorting,
+ * color-coded status</li>
+ * <li><b>Slow Methods</b> — methods exceeding the configurable slow
+ * threshold</li>
+ * <li><b>Errors</b> — methods that have thrown exceptions, with last exception
+ * type</li>
+ * <li><b>Call Traces</b> — JTree visualisation of recent parent→child call
+ * trees</li>
+ * <li><b>Configuration</b> — runtime agent config controls (enable/disable,
+ * threshold)</li>
  * </ol>
  * <p>
- * Features: live JVM heap bar, CSV export, reset with confirmation, light/dark toggle,
+ * Features: live JVM heap bar, CSV export, reset with confirmation, light/dark
+ * toggle,
  * theme persistence via Java Preferences API.
  *
  * @author Ali
@@ -52,7 +58,7 @@ import java.util.prefs.Preferences;
 public class MetricsDashboard {
 
     // ═══════════════════════════════════════════════════════════════════
-    //  THEME STATE
+    // THEME STATE
     // ═══════════════════════════════════════════════════════════════════
 
     private static boolean isDarkTheme;
@@ -63,20 +69,20 @@ public class MetricsDashboard {
     private static final String PREF_DARK_THEME = "darkTheme";
 
     // ═══════════════════════════════════════════════════════════════════
-    //  DESIGN SYSTEM — Mutable Colour Tokens (swapped on theme toggle)
+    // DESIGN SYSTEM — Mutable Colour Tokens (swapped on theme toggle)
     // ═══════════════════════════════════════════════════════════════════
 
     // Surface layers
-    private static Color SURFACE_0;    // window background
-    private static Color SURFACE_1;    // panels / header
-    private static Color SURFACE_2;    // cards / tables
-    private static Color SURFACE_3;    // elevated cards / inputs
-    private static Color SURFACE_4;    // hover / alt rows
+    private static Color SURFACE_0; // window background
+    private static Color SURFACE_1; // panels / header
+    private static Color SURFACE_2; // cards / tables
+    private static Color SURFACE_3; // elevated cards / inputs
+    private static Color SURFACE_4; // hover / alt rows
 
     // Borders
-    private static Color BORDER_0;     // subtle separator
-    private static Color BORDER_1;     // input / card border
-    private static Color BORDER_2;     // focus ring
+    private static Color BORDER_0; // subtle separator
+    private static Color BORDER_1; // input / card border
+    private static Color BORDER_2; // focus ring
 
     // Text
     private static Color TEXT_PRIMARY;
@@ -101,71 +107,71 @@ public class MetricsDashboard {
     private static Color ROW_RED_BG;
 
     // ═══════════════════════════════════════════════════════════════════
-    //  PALETTE DEFINITIONS
+    // PALETTE DEFINITIONS
     // ═══════════════════════════════════════════════════════════════════
 
     private static void applyDarkPalette() {
-        SURFACE_0    = new Color(12, 13, 18);
-        SURFACE_1    = new Color(18, 20, 28);
-        SURFACE_2    = new Color(24, 26, 36);
-        SURFACE_3    = new Color(32, 35, 48);
-        SURFACE_4    = new Color(40, 44, 58);
+        SURFACE_0 = new Color(12, 13, 18);
+        SURFACE_1 = new Color(18, 20, 28);
+        SURFACE_2 = new Color(24, 26, 36);
+        SURFACE_3 = new Color(32, 35, 48);
+        SURFACE_4 = new Color(40, 44, 58);
 
-        BORDER_0     = new Color(38, 41, 56);
-        BORDER_1     = new Color(52, 56, 74);
-        BORDER_2     = new Color(65, 70, 92);
+        BORDER_0 = new Color(38, 41, 56);
+        BORDER_1 = new Color(52, 56, 74);
+        BORDER_2 = new Color(65, 70, 92);
 
-        TEXT_PRIMARY   = new Color(230, 232, 242);
+        TEXT_PRIMARY = new Color(230, 232, 242);
         TEXT_SECONDARY = new Color(145, 150, 175);
-        TEXT_TERTIARY  = new Color(100, 105, 130);
-        TEXT_LINK      = new Color(105, 165, 255);
+        TEXT_TERTIARY = new Color(100, 105, 130);
+        TEXT_LINK = new Color(105, 165, 255);
 
-        GREEN   = new Color(62, 207, 142);
-        YELLOW  = new Color(250, 195, 65);
-        ORANGE  = new Color(240, 150, 55);
-        RED     = new Color(245, 78, 78);
+        GREEN = new Color(62, 207, 142);
+        YELLOW = new Color(250, 195, 65);
+        ORANGE = new Color(240, 150, 55);
+        RED = new Color(245, 78, 78);
 
-        BLUE    = new Color(75, 140, 255);
-        PURPLE  = new Color(148, 100, 255);
-        CYAN    = new Color(55, 205, 210);
+        BLUE = new Color(75, 140, 255);
+        PURPLE = new Color(148, 100, 255);
+        CYAN = new Color(55, 205, 210);
 
-        ROW_GREEN_BG  = new Color(20, 45, 35);
+        ROW_GREEN_BG = new Color(20, 45, 35);
         ROW_YELLOW_BG = new Color(42, 38, 18);
-        ROW_RED_BG    = new Color(48, 18, 22);
+        ROW_RED_BG = new Color(48, 18, 22);
     }
 
     private static void applyLightPalette() {
-        SURFACE_0    = new Color(244, 245, 250);
-        SURFACE_1    = new Color(234, 236, 244);
-        SURFACE_2    = new Color(255, 255, 255);
-        SURFACE_3    = new Color(240, 242, 248);
-        SURFACE_4    = new Color(232, 234, 242);
+        SURFACE_0 = new Color(244, 245, 250);
+        SURFACE_1 = new Color(234, 236, 244);
+        SURFACE_2 = new Color(255, 255, 255);
+        SURFACE_3 = new Color(240, 242, 248);
+        SURFACE_4 = new Color(232, 234, 242);
 
-        BORDER_0     = new Color(214, 218, 230);
-        BORDER_1     = new Color(196, 200, 216);
-        BORDER_2     = new Color(175, 180, 200);
+        BORDER_0 = new Color(214, 218, 230);
+        BORDER_1 = new Color(196, 200, 216);
+        BORDER_2 = new Color(175, 180, 200);
 
-        TEXT_PRIMARY   = new Color(26, 28, 40);
+        TEXT_PRIMARY = new Color(26, 28, 40);
         TEXT_SECONDARY = new Color(90, 95, 115);
-        TEXT_TERTIARY  = new Color(135, 140, 162);
-        TEXT_LINK      = new Color(42, 105, 218);
+        TEXT_TERTIARY = new Color(135, 140, 162);
+        TEXT_LINK = new Color(42, 105, 218);
 
-        GREEN   = new Color(22, 163, 90);
-        YELLOW  = new Color(200, 145, 10);
-        ORANGE  = new Color(205, 115, 10);
-        RED     = new Color(220, 52, 52);
+        GREEN = new Color(22, 163, 90);
+        YELLOW = new Color(200, 145, 10);
+        ORANGE = new Color(205, 115, 10);
+        RED = new Color(220, 52, 52);
 
-        BLUE    = new Color(42, 105, 218);
-        PURPLE  = new Color(110, 60, 220);
-        CYAN    = new Color(8, 140, 162);
+        BLUE = new Color(42, 105, 218);
+        PURPLE = new Color(110, 60, 220);
+        CYAN = new Color(8, 140, 162);
 
-        ROW_GREEN_BG  = new Color(228, 248, 238);
+        ROW_GREEN_BG = new Color(228, 248, 238);
         ROW_YELLOW_BG = new Color(253, 245, 222);
-        ROW_RED_BG    = new Color(252, 228, 232);
+        ROW_RED_BG = new Color(252, 228, 232);
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  DESIGN SYSTEM — Typography (immutable)
+    // DESIGN SYSTEM — Typography (immutable)
     // ═══════════════════════════════════════════════════════════════════
 
     private static final Font FONT_MONO;
@@ -184,24 +190,30 @@ public class MetricsDashboard {
         // ── Fonts ──
         String mono = "Consolas";
         for (String f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
-            if (f.equals("JetBrains Mono")) { mono = f; break; }
+            if (f.equals("JetBrains Mono")) {
+                mono = f;
+                break;
+            }
         }
-        FONT_MONO        = new Font(mono, Font.PLAIN, 12);
-        FONT_MONO_SM     = new Font(mono, Font.PLAIN, 11);
-        FONT_BODY        = new Font("Segoe UI", Font.PLAIN, 13);
-        FONT_BODY_BOLD   = new Font("Segoe UI", Font.BOLD, 13);
-        FONT_CAPTION     = new Font("Segoe UI", Font.PLAIN, 11);
-        FONT_CAPTION_BOLD= new Font("Segoe UI", Font.BOLD, 11);
-        FONT_H1          = new Font("Segoe UI", Font.BOLD, 22);
-        FONT_H2          = new Font("Segoe UI", Font.BOLD, 16);
-        FONT_H3          = new Font("Segoe UI", Font.BOLD, 14);
-        FONT_STAT_VALUE  = new Font("Segoe UI", Font.BOLD, 28);
-        FONT_STAT_LABEL  = new Font("Segoe UI", Font.PLAIN, 10);
+        FONT_MONO = new Font(mono, Font.PLAIN, 12);
+        FONT_MONO_SM = new Font(mono, Font.PLAIN, 11);
+        FONT_BODY = new Font("Segoe UI", Font.PLAIN, 13);
+        FONT_BODY_BOLD = new Font("Segoe UI", Font.BOLD, 13);
+        FONT_CAPTION = new Font("Segoe UI", Font.PLAIN, 11);
+        FONT_CAPTION_BOLD = new Font("Segoe UI", Font.BOLD, 11);
+        FONT_H1 = new Font("Segoe UI", Font.BOLD, 22);
+        FONT_H2 = new Font("Segoe UI", Font.BOLD, 16);
+        FONT_H3 = new Font("Segoe UI", Font.BOLD, 14);
+        FONT_STAT_VALUE = new Font("Segoe UI", Font.BOLD, 28);
+        FONT_STAT_LABEL = new Font("Segoe UI", Font.PLAIN, 10);
 
         // ── Theme: load persisted preference, default to dark ──
         isDarkTheme = Preferences.userNodeForPackage(MetricsDashboard.class)
                 .getBoolean(PREF_DARK_THEME, true);
-        if (isDarkTheme) applyDarkPalette(); else applyLightPalette();
+        if (isDarkTheme)
+            applyDarkPalette();
+        else
+            applyLightPalette();
     }
 
     // Spacing constants (8px grid)
@@ -210,7 +222,7 @@ public class MetricsDashboard {
     private static final int SP_MD = 12;
     private static final int SP_LG = 16;
     private static final int SP_XL = 24;
-    private static final int SP_2XL= 32;
+    private static final int SP_2XL = 32;
 
     // Border radius
     private static final int RADIUS_SM = 6;
@@ -218,19 +230,20 @@ public class MetricsDashboard {
     private static final int RADIUS_LG = 14;
 
     // ═══════════════════════════════════════════════════════════════════
-    //  REUSABLE UI PRIMITIVES
+    // REUSABLE UI PRIMITIVES
     // ═══════════════════════════════════════════════════════════════════
 
     /** A panel with a rounded-rectangle fill and optional border. */
     private static JPanel roundedPanel(Color bg, Color borderColor, int radius) {
         JPanel p = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = gfx(g);
                 g2.setColor(bg);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius));
                 if (borderColor != null) {
                     g2.setColor(borderColor);
-                    g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth()-1, getHeight()-1, radius, radius));
+                    g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth() - 1, getHeight() - 1, radius, radius));
                 }
                 g2.dispose();
             }
@@ -252,19 +265,36 @@ public class MetricsDashboard {
                 setFont(FONT_BODY_BOLD);
                 setForeground(accent);
                 addMouseListener(new MouseAdapter() {
-                    @Override public void mouseEntered(MouseEvent e) { hovered = true; repaint(); }
-                    @Override public void mouseExited(MouseEvent e)  { hovered = false; repaint(); }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        hovered = true;
+                        repaint();
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hovered = false;
+                        repaint();
+                    }
                 });
             }
-            @Override protected void paintComponent(Graphics g) {
+
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = gfx(g);
-                Color bg = hovered ? new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), 30)
-                                   : SURFACE_3;
-                Color border = hovered ? accent : BORDER_1;
+                // Accent-tinted bg — always visible on any header surface
+                Color bg = hovered
+                        ? new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), isDarkTheme ? 55 : 45)
+                        : new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), isDarkTheme ? 20 : 28);
+                // Accent border — never blends into background like BORDER_1 did in light mode
+                Color border = hovered
+                        ? accent
+                        : new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), isDarkTheme ? 160 : 210);
                 g2.setColor(bg);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), RADIUS_SM, RADIUS_SM));
+                g2.setStroke(new BasicStroke(1.5f));
                 g2.setColor(border);
-                g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth()-1, getHeight()-1, RADIUS_SM, RADIUS_SM));
+                g2.draw(new RoundRectangle2D.Float(1, 1, getWidth() - 2, getHeight() - 2, RADIUS_SM, RADIUS_SM));
                 g2.dispose();
                 setForeground(hovered ? (isDarkTheme ? Color.WHITE : accent.darker()) : accent);
                 super.paintComponent(g);
@@ -283,7 +313,7 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  COLUMN DEFINITIONS
+    // COLUMN DEFINITIONS
     // ═══════════════════════════════════════════════════════════════════
 
     private static final String[] ALL_COLUMNS = {
@@ -297,7 +327,7 @@ public class MetricsDashboard {
     };
 
     // ═══════════════════════════════════════════════════════════════════
-    //  TABLE MODEL
+    // TABLE MODEL
     // ═══════════════════════════════════════════════════════════════════
 
     private static final class MetricsTableModel extends AbstractTableModel {
@@ -306,8 +336,14 @@ public class MetricsDashboard {
         private List<Object[]> rows = new ArrayList<>();
         private String filter = "";
 
-        MetricsTableModel(String[] cols, int mode) { this.columns = cols; this.mode = mode; }
-        void setFilter(String f) { this.filter = f.toLowerCase(); }
+        MetricsTableModel(String[] cols, int mode) {
+            this.columns = cols;
+            this.mode = mode;
+        }
+
+        void setFilter(String f) {
+            this.filter = f.toLowerCase();
+        }
 
         void refreshData() {
             Map<String, MethodMetrics> snap = MetricsRegistry.getInstance().getMetricsSnapshot();
@@ -317,76 +353,110 @@ public class MetricsDashboard {
             for (Map.Entry<String, MethodMetrics> e : snap.entrySet()) {
                 MethodMetrics m = e.getValue();
                 String key = e.getKey();
-                if (!filter.isEmpty() && !key.toLowerCase().contains(filter)) continue;
+                if (!filter.isEmpty() && !key.toLowerCase().contains(filter))
+                    continue;
 
                 if (mode == 0) {
-                    out.add(new Object[]{
-                        statusOf(m.getAverageTimeMs(), m.getErrorRate()*100, threshold),
-                        key, m.getCallCount(), m.getTotalTimeMs(), m.getAverageTimeMs(),
-                        m.getMinTimeMs(), m.getMaxTimeMs(), m.getErrorCount(), m.getErrorRate()*100.0
+                    out.add(new Object[] {
+                            statusOf(m.getAverageTimeMs(), m.getErrorRate() * 100, threshold),
+                            key, m.getCallCount(), m.getTotalTimeMs(), m.getAverageTimeMs(),
+                            m.getMinTimeMs(), m.getMaxTimeMs(), m.getErrorCount(), m.getErrorRate() * 100.0
                     });
                 } else if (mode == 1) {
-                    if (m.getAverageTimeMs() <= threshold) continue;
-                    out.add(new Object[]{
-                        m.getAverageTimeMs() > threshold ? "SLOW" : "WARN",
-                        key, m.getCallCount(), m.getAverageTimeMs(), m.getMaxTimeMs(), m.getErrorCount()
+                    if (m.getAverageTimeMs() <= threshold)
+                        continue;
+                    out.add(new Object[] {
+                            m.getAverageTimeMs() > threshold ? "SLOW" : "WARN",
+                            key, m.getCallCount(), m.getAverageTimeMs(), m.getMaxTimeMs(), m.getErrorCount()
                     });
                 } else {
-                    if (m.getErrorCount() == 0) continue;
-                    out.add(new Object[]{
-                        key, m.getErrorCount(), m.getCallCount(), m.getErrorRate()*100.0,
-                        m.getLastExceptionType().isEmpty() ? "—" : m.getLastExceptionType()
+                    if (m.getErrorCount() == 0)
+                        continue;
+                    out.add(new Object[] {
+                            key, m.getErrorCount(), m.getCallCount(), m.getErrorRate() * 100.0,
+                            m.getLastExceptionType().isEmpty() ? "—" : m.getLastExceptionType()
                     });
                 }
             }
 
-            if (mode == 2) out.sort((a, b) -> Long.compare((Long)b[1], (Long)a[1]));
-            else { int c = mode == 1 ? 3 : 4; out.sort((a, b) -> Double.compare((Double)b[c], (Double)a[c])); }
+            if (mode == 2)
+                out.sort((a, b) -> Long.compare((Long) b[1], (Long) a[1]));
+            else {
+                int c = mode == 1 ? 3 : 4;
+                out.sort((a, b) -> Double.compare((Double) b[c], (Double) a[c]));
+            }
             rows = out;
             fireTableDataChanged();
         }
 
-        @Override public int getRowCount()    { return rows.size(); }
-        @Override public int getColumnCount() { return columns.length; }
-        @Override public String getColumnName(int c) { return columns[c]; }
-        @Override public Object getValueAt(int r, int c) { return r < rows.size() ? rows.get(r)[c] : null; }
-        @Override public Class<?> getColumnClass(int c) {
+        @Override
+        public int getRowCount() {
+            return rows.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columns.length;
+        }
+
+        @Override
+        public String getColumnName(int c) {
+            return columns[c];
+        }
+
+        @Override
+        public Object getValueAt(int r, int c) {
+            return r < rows.size() ? rows.get(r)[c] : null;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int c) {
             String n = columns[c];
-            if ("Status".equals(n) || "Method".equals(n) || "Last Exception".equals(n)) return String.class;
-            if ("Calls".equals(n) || "Errors".equals(n)) return Long.class;
+            if ("Status".equals(n) || "Method".equals(n) || "Last Exception".equals(n))
+                return String.class;
+            if ("Calls".equals(n) || "Errors".equals(n))
+                return Long.class;
             return Double.class;
         }
 
         double avgMs(int r) {
-            if (r < 0 || r >= rows.size()) return 0;
+            if (r < 0 || r >= rows.size())
+                return 0;
             return mode == 0 ? (Double) rows.get(r)[4] : mode == 1 ? (Double) rows.get(r)[3] : 0;
         }
+
         double errRate(int r) {
-            if (r < 0 || r >= rows.size()) return 0;
+            if (r < 0 || r >= rows.size())
+                return 0;
             return mode == 0 ? (Double) rows.get(r)[8] : mode == 2 ? (Double) rows.get(r)[3] : 0;
         }
 
         private static String statusOf(double avg, double errPct, long threshold) {
-            if (errPct > 10.0)       return "ERROR";
-            if (avg > threshold)     return "SLOW";
-            if (avg > threshold*0.5) return "WARN";
+            if (errPct > 10.0)
+                return "ERROR";
+            if (avg > threshold)
+                return "SLOW";
+            if (avg > threshold * 0.5)
+                return "WARN";
             return "OK";
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  CUSTOM TABLE CELL RENDERER — status pill + colour-coded rows
+    // CUSTOM TABLE CELL RENDERER — status pill + colour-coded rows
     // ═══════════════════════════════════════════════════════════════════
 
     private static final class ApmCellRenderer extends DefaultTableCellRenderer {
         private final MetricsTableModel model;
         private String statusValue = "";
 
-        ApmCellRenderer(MetricsTableModel m) { this.model = m; }
+        ApmCellRenderer(MetricsTableModel m) {
+            this.model = m;
+        }
 
         @Override
         public Component getTableCellRendererComponent(JTable t, Object val,
-                                                       boolean sel, boolean focus, int row, int col) {
+                boolean sel, boolean focus, int row, int col) {
             super.getTableCellRendererComponent(t, val, sel, focus, row, col);
             setFont(FONT_MONO);
             setBorder(BorderFactory.createEmptyBorder(0, SP_MD, 0, SP_MD));
@@ -399,14 +469,25 @@ public class MetricsDashboard {
 
             if (!sel) {
                 Color bg, fg;
-                if (err > 10) { bg = ROW_RED_BG; fg = RED; }
-                else if (avg > thr)   { bg = ROW_RED_BG; fg = RED; }
-                else if (avg > thr*.5){ bg = ROW_YELLOW_BG; fg = YELLOW; }
-                else { bg = row%2==0 ? SURFACE_2 : SURFACE_4; fg = TEXT_PRIMARY; }
+                if (err > 10) {
+                    bg = new Color(180, 30, 30);
+                    fg = new Color(255, 200, 200);
+                } else if (avg > thr) {
+                    bg = ROW_RED_BG;
+                    fg = RED;
+                } else if (avg > thr * .5) {
+                    bg = ROW_YELLOW_BG;
+                    fg = YELLOW;
+                } else {
+                    bg = row % 2 == 0 ? SURFACE_2 : SURFACE_4;
+                    fg = TEXT_PRIMARY;
+                }
                 setBackground(bg);
                 setForeground(fg);
 
-                if ("Method".equals(colName) || "Last Exception".equals(colName)) setForeground(TEXT_PRIMARY);
+                if ("Method".equals(colName) || "Last Exception".equals(colName)) {
+                    setForeground(err > 10 ? new Color(255, 220, 220) : TEXT_PRIMARY);
+                }
                 if ("Status".equals(colName)) {
                     statusValue = val != null ? val.toString() : "";
                     setText("");
@@ -414,7 +495,20 @@ public class MetricsDashboard {
             } else {
                 setBackground(new Color(BLUE.getRed(), BLUE.getGreen(), BLUE.getBlue(), 50));
                 setForeground(isDarkTheme ? Color.WHITE : TEXT_PRIMARY);
-                if ("Status".equals(colName)) { statusValue = val != null ? val.toString() : ""; setText(""); }
+                if ("Status".equals(colName)) {
+                    statusValue = val != null ? val.toString() : "";
+                    setText("");
+                }
+            }
+
+            // Truncate method name to ClassName#method, show full name as tooltip
+            if ("Method".equals(colName) && val instanceof String) {
+                String fullName = (String) val;
+                String shortName = truncateMethodName(fullName);
+                setText(shortName);
+                setToolTipText(fullName);
+            } else {
+                setToolTipText(null);
             }
 
             if ("Method".equals(colName) || "Last Exception".equals(colName))
@@ -424,7 +518,8 @@ public class MetricsDashboard {
             else
                 setHorizontalAlignment(SwingConstants.RIGHT);
 
-            if (val instanceof Double) setText(String.format("%.2f", val));
+            if (val instanceof Double)
+                setText(String.format("%.2f", val));
             return this;
         }
 
@@ -436,15 +531,31 @@ public class MetricsDashboard {
                 Color pill, pillText;
                 String label;
                 switch (statusValue) {
-                    case "OK":    pill = new Color(GREEN.getRed(), GREEN.getGreen(), GREEN.getBlue(), isDarkTheme ? 35 : 50);
-                                  pillText = GREEN; label = "OK"; break;
-                    case "WARN":  pill = new Color(YELLOW.getRed(), YELLOW.getGreen(), YELLOW.getBlue(), isDarkTheme ? 35 : 50);
-                                  pillText = YELLOW; label = "WARN"; break;
-                    case "SLOW":  pill = new Color(RED.getRed(), RED.getGreen(), RED.getBlue(), isDarkTheme ? 35 : 50);
-                                  pillText = RED; label = "SLOW"; break;
-                    case "ERROR": pill = new Color(RED.getRed(), RED.getGreen(), RED.getBlue(), isDarkTheme ? 50 : 65);
-                                  pillText = RED; label = "ERR"; break;
-                    default:      pill = SURFACE_3; pillText = TEXT_SECONDARY; label = statusValue; break;
+                    case "OK":
+                        pill = new Color(GREEN.getRed(), GREEN.getGreen(), GREEN.getBlue(), isDarkTheme ? 35 : 50);
+                        pillText = GREEN;
+                        label = "OK";
+                        break;
+                    case "WARN":
+                        pill = new Color(YELLOW.getRed(), YELLOW.getGreen(), YELLOW.getBlue(), isDarkTheme ? 35 : 50);
+                        pillText = YELLOW;
+                        label = "WARN";
+                        break;
+                    case "SLOW":
+                        pill = new Color(RED.getRed(), RED.getGreen(), RED.getBlue(), isDarkTheme ? 35 : 50);
+                        pillText = RED;
+                        label = "SLOW";
+                        break;
+                    case "ERROR":
+                        pill = new Color(RED.getRed(), RED.getGreen(), RED.getBlue(), isDarkTheme ? 50 : 65);
+                        pillText = RED;
+                        label = "ERR";
+                        break;
+                    default:
+                        pill = SURFACE_3;
+                        pillText = TEXT_SECONDARY;
+                        label = statusValue;
+                        break;
                 }
                 g2.setFont(FONT_CAPTION_BOLD);
                 FontMetrics fm = g2.getFontMetrics();
@@ -462,30 +573,29 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  CUSTOM TABLE HEADER RENDERER
+    // CUSTOM TABLE HEADER RENDERER
     // ═══════════════════════════════════════════════════════════════════
 
     private static final class HeaderRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable t, Object val,
-                                                       boolean sel, boolean focus, int row, int col) {
+                boolean sel, boolean focus, int row, int col) {
             JLabel l = (JLabel) super.getTableCellRendererComponent(t, val, sel, focus, row, col);
             l.setFont(FONT_CAPTION_BOLD);
             l.setForeground(TEXT_SECONDARY);
             l.setBackground(SURFACE_1);
             l.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_0),
-                    BorderFactory.createEmptyBorder(SP_SM, SP_MD, SP_SM, SP_MD)
-            ));
+                    BorderFactory.createEmptyBorder(SP_SM, SP_MD, SP_SM, SP_MD)));
             l.setHorizontalAlignment(col == 0 ? SwingConstants.CENTER
                     : ("Method".equals(val) || "Last Exception".equals(val)) ? SwingConstants.LEFT
-                    : SwingConstants.RIGHT);
+                            : SwingConstants.RIGHT);
             return l;
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  JVM MEMORY BAR (custom-painted)
+    // JVM MEMORY BAR (custom-painted)
     // ═══════════════════════════════════════════════════════════════════
 
     private static final class MemoryBar extends JPanel {
@@ -493,80 +603,98 @@ public class MetricsDashboard {
         private String text = "";
 
         MemoryBar() {
-            setPreferredSize(new Dimension(0, 26));
+            setPreferredSize(new Dimension(0, 14));
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 14));
             setOpaque(false);
         }
 
         void update(long usedMB, long totalMB) {
-            pct = totalMB > 0 ? (double)usedMB/totalMB : 0;
-            text = String.format("JVM Heap   %d MB / %d MB   (%.0f%%)", usedMB, totalMB, pct*100);
+            pct = totalMB > 0 ? (double) usedMB / totalMB : 0;
+            text = String.format("Heap: %dMB / %dMB", usedMB, totalMB);
             repaint();
         }
 
-        @Override protected void paintComponent(Graphics g) {
+        @Override
+        protected void paintComponent(Graphics g) {
             Graphics2D g2 = gfx(g);
-            int x=SP_LG, y=3, w=getWidth()-SP_LG*2, h=getHeight()-6;
+            int x = 0, y = 0, w = getWidth(), h = getHeight();
 
             // Track
             g2.setColor(SURFACE_3);
             g2.fill(new RoundRectangle2D.Float(x, y, w, h, h, h));
 
             // Fill
-            int fw = Math.max(0, (int)(w * pct));
+            int fw = Math.max(0, (int) (w * pct));
             if (fw > 0) {
-                Color c = pct<0.6 ? GREEN : pct<0.85 ? YELLOW : RED;
-                g2.setPaint(new GradientPaint(x, y, c, x+fw, y, c.darker()));
+                Color c = pct < 0.6 ? GREEN : pct < 0.85 ? YELLOW : RED;
+                g2.setPaint(new GradientPaint(x, y, c, x + fw, y, c.darker()));
                 g2.fill(new RoundRectangle2D.Float(x, y, fw, h, h, h));
             }
 
             // Text
-            g2.setFont(FONT_CAPTION);
+            g2.setFont(new Font(FONT_CAPTION.getFamily(), Font.PLAIN, 9));
             g2.setColor(TEXT_PRIMARY);
             FontMetrics fm = g2.getFontMetrics();
-            g2.drawString(text, x+(w-fm.stringWidth(text))/2, y+(h+fm.getAscent()-fm.getDescent())/2);
+            g2.drawString(text, x + (w - fm.stringWidth(text)) / 2, y + (h + fm.getAscent() - fm.getDescent()) / 2);
 
             g2.dispose();
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  CUSTOM TABBED PANE UI — flat tabs with bottom accent line
+    // CUSTOM TABBED PANE UI — flat tabs with bottom accent line
     // ═══════════════════════════════════════════════════════════════════
 
     private static final class FlatTabbedPaneUI extends BasicTabbedPaneUI {
-        @Override protected void installDefaults() {
+        @Override
+        protected void installDefaults() {
             super.installDefaults();
             tabAreaInsets = new Insets(0, SP_MD, 0, SP_MD);
             selectedTabPadInsets = new Insets(0, 0, 0, 0);
-            tabInsets = new Insets(SP_SM+2, SP_LG, SP_SM+2, SP_LG);
+            tabInsets = new Insets(SP_SM + 2, SP_LG, SP_SM + 2, SP_LG);
             contentBorderInsets = new Insets(0, 0, 0, 0);
         }
-        @Override protected void paintTabBorder(Graphics g, int placement, int idx,
-                                                 int x, int y, int w, int h, boolean sel) { }
-        @Override protected void paintTabBackground(Graphics g, int placement, int idx,
-                                                     int x, int y, int w, int h, boolean sel) {
+
+        @Override
+        protected void paintTabBorder(Graphics g, int placement, int idx,
+                int x, int y, int w, int h, boolean sel) {
+        }
+
+        @Override
+        protected void paintTabBackground(Graphics g, int placement, int idx,
+                int x, int y, int w, int h, boolean sel) {
             Graphics2D g2 = gfx(g);
             if (sel) {
                 g2.setColor(new Color(BLUE.getRed(), BLUE.getGreen(), BLUE.getBlue(), isDarkTheme ? 20 : 30));
-                g2.fill(new RoundRectangle2D.Float(x+2, y+2, w-4, h-2, RADIUS_SM, RADIUS_SM));
+                g2.fill(new RoundRectangle2D.Float(x + 2, y + 2, w - 4, h - 2, RADIUS_SM, RADIUS_SM));
                 g2.setColor(BLUE);
-                g2.fillRect(x+4, y+h-3, w-8, 3);
+                g2.fillRect(x + 4, y + h - 3, w - 8, 3);
             }
             g2.dispose();
         }
-        @Override protected void paintContentBorder(Graphics g, int placement, int sel) { }
-        @Override protected void paintFocusIndicator(Graphics g, int placement, Rectangle[] rects,
-                                                      int idx, Rectangle icon, Rectangle text, boolean sel) { }
-        @Override protected int calculateTabWidth(int placement, int idx, FontMetrics fm) {
+
+        @Override
+        protected void paintContentBorder(Graphics g, int placement, int sel) {
+        }
+
+        @Override
+        protected void paintFocusIndicator(Graphics g, int placement, Rectangle[] rects,
+                int idx, Rectangle icon, Rectangle text, boolean sel) {
+        }
+
+        @Override
+        protected int calculateTabWidth(int placement, int idx, FontMetrics fm) {
             return super.calculateTabWidth(placement, idx, fm) + SP_LG;
         }
-        @Override protected int calculateTabHeight(int placement, int idx, int fontH) {
+
+        @Override
+        protected int calculateTabHeight(int placement, int idx, int fontH) {
             return fontH + SP_LG + SP_SM;
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  ENTRY POINT
+    // ENTRY POINT
     // ═══════════════════════════════════════════════════════════════════
 
     public static void launch() {
@@ -574,8 +702,10 @@ public class MetricsDashboard {
     }
 
     private static void createAndShow() {
-        try { UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); }
-        catch (Exception ignored) {}
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception ignored) {
+        }
 
         mainFrame = new JFrame("Java Agent APM — Performance Dashboard");
         mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -588,7 +718,7 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  BUILD UI — called on initial launch AND on theme toggle
+    // BUILD UI — called on initial launch AND on theme toggle
     // ═══════════════════════════════════════════════════════════════════
 
     private static void buildUI(JFrame frame) {
@@ -602,12 +732,12 @@ public class MetricsDashboard {
         // ── Header ──
         JPanel header = buildHeader(frame);
 
-        // ── Memory Bar ──
+        // ── Memory Bar (slim inline, placed inside uptime card) ──
         MemoryBar memBar = new MemoryBar();
 
         // ── Stats ──
         JLabel sM = statVal("0"), sI = statVal("0"), sE = statVal("0"), sU = statVal("0s");
-        JPanel stats = buildStats(sM, sI, sE, sU);
+        JPanel stats = buildStats(sM, sI, sE, sU, memBar);
 
         // ── Tabs ──
         JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
@@ -617,15 +747,19 @@ public class MetricsDashboard {
         tabs.setFont(FONT_BODY_BOLD);
         tabs.setBorder(BorderFactory.createEmptyBorder(0, SP_SM, SP_MD, SP_SM));
 
-        MetricsTableModel allModel  = new MetricsTableModel(ALL_COLUMNS, 0);
+        MetricsTableModel allModel = new MetricsTableModel(ALL_COLUMNS, 0);
         MetricsTableModel slowModel = new MetricsTableModel(SLOW_COLUMNS, 1);
-        MetricsTableModel errModel  = new MetricsTableModel(ERROR_COLUMNS, 2);
+        MetricsTableModel errModel = new MetricsTableModel(ERROR_COLUMNS, 2);
 
-        tabs.addTab("  All Methods  ",  buildTableTab(allModel,  "Search all methods..."));
-        tabs.addTab("  Slow Methods  ", buildTableTab(slowModel, "Search slow methods..."));
-        tabs.addTab("  Errors  ",       buildTableTab(errModel,  "Search errors..."));
-        tabs.addTab("  Call Traces  ",  buildTracesTab());
-        tabs.addTab("  Configuration  ",buildConfigTab());
+        tabs.addTab("  All Methods  ", buildTableTab(allModel, "Search all methods..."));
+        tabs.addTab("  Slow  ", buildTableTab(slowModel, "Search slow methods..."));
+        tabs.addTab("  Errors  ", buildTableTab(errModel, "Search errors..."));
+        tabs.addTab("  Call Traces  ", buildTracesTab());
+        tabs.addTab("  Configuration  ", buildConfigTab());
+
+        // ── Tab badge labels for Slow and Errors ──
+        tabs.setTabComponentAt(1, createBadgeTabLabel("Slow", 0, new Color(230, 140, 20), Color.WHITE));
+        tabs.setTabComponentAt(2, createBadgeTabLabel("Errors", 0, new Color(220, 40, 40), Color.WHITE));
 
         // ── Status bar ──
         JLabel status = new JLabel("  Ready");
@@ -641,7 +775,7 @@ public class MetricsDashboard {
         JPanel top = new JPanel();
         top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
         top.setBackground(SURFACE_0);
-        for (JComponent c : new JComponent[]{header, memBar, stats}) {
+        for (JComponent c : new JComponent[] { header, stats }) {
             c.setAlignmentX(Component.LEFT_ALIGNMENT);
             c.setMaximumSize(new Dimension(Integer.MAX_VALUE, c.getPreferredSize().height));
             top.add(c);
@@ -665,41 +799,45 @@ public class MetricsDashboard {
             sU.setText(fmtUptime(reg.getUptimeMillis()));
 
             Runtime rt = Runtime.getRuntime();
-            long used = (rt.totalMemory()-rt.freeMemory())/(1024*1024);
-            long total = rt.totalMemory()/(1024*1024);
+            long used = (rt.totalMemory() - rt.freeMemory()) / (1024 * 1024);
+            long total = rt.totalMemory() / (1024 * 1024);
             memBar.update(used, total);
 
             AgentConfig cfg = AgentConfig.getInstance();
             long slow = reg.getSlowMethods(cfg.getSlowThresholdMs()).size();
             long errs = reg.getTotalErrors();
 
-            tabs.setTitleAt(1, slow > 0 ? String.format("  Slow (%d)  ", slow) : "  Slow Methods  ");
-            tabs.setTitleAt(2, errs > 0 ? String.format("  Errors (%d)  ", errs) : "  Errors  ");
+            updateBadgeTabLabel(tabs, 1, "Slow", (int) slow, new Color(230, 140, 20), Color.WHITE);
+            updateBadgeTabLabel(tabs, 2, "Errors", (int) errs, new Color(220, 40, 40), Color.WHITE);
 
             status.setText(String.format(
-                "  %d methods   |   %d slow (>%dms)   |   %d errors   |   HTTP ::%d   |   Heap %dMB / %dMB",
-                reg.getMethodCount(), slow, cfg.getSlowThresholdMs(), errs, cfg.getHttpPort(), used, total));
+                    "  %d methods   |   %d slow (>%dms)   |   %d errors   |   HTTP ::%d   |   Heap %dMB / %dMB",
+                    reg.getMethodCount(), slow, cfg.getSlowThresholdMs(), errs, cfg.getHttpPort(), used, total));
         });
         refreshTimer.setInitialDelay(300);
         refreshTimer.start();
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  THEME TOGGLE — swap palette, persist preference, rebuild UI
+    // THEME TOGGLE — swap palette, persist preference, rebuild UI
     // ═══════════════════════════════════════════════════════════════════
 
     private static void toggleTheme() {
         isDarkTheme = !isDarkTheme;
 
         // 1. Swap the colour palette
-        if (isDarkTheme) applyDarkPalette(); else applyLightPalette();
+        if (isDarkTheme)
+            applyDarkPalette();
+        else
+            applyLightPalette();
 
         // 2. Persist preference
         Preferences.userNodeForPackage(MetricsDashboard.class)
                 .putBoolean(PREF_DARK_THEME, isDarkTheme);
 
         // 3. Stop old timer
-        if (refreshTimer != null) refreshTimer.stop();
+        if (refreshTimer != null)
+            refreshTimer.stop();
 
         // 4. Rebuild entire UI with new palette
         mainFrame.getContentPane().removeAll();
@@ -709,23 +847,24 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  HEADER BAR (with theme toggle button)
+    // HEADER BAR (with theme toggle button)
     // ═══════════════════════════════════════════════════════════════════
 
     private static JPanel buildHeader(JFrame frame) {
         JPanel bar = new JPanel(new BorderLayout()) {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = gfx(g);
                 g2.setColor(SURFACE_1);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 // Bottom gradient accent line
-                g2.setPaint(new GradientPaint(0, getHeight()-2, BLUE, getWidth(), getHeight()-2, PURPLE));
-                g2.fillRect(0, getHeight()-2, getWidth(), 2);
+                g2.setPaint(new GradientPaint(0, getHeight() - 2, BLUE, getWidth(), getHeight() - 2, PURPLE));
+                g2.fillRect(0, getHeight() - 2, getWidth(), 2);
                 g2.dispose();
             }
         };
         bar.setBorder(BorderFactory.createEmptyBorder(SP_LG, SP_XL, SP_LG, SP_XL));
-        bar.setPreferredSize(new Dimension(0, 72));
+        // Removed hardcoded preferred size so the layout manager automatically fits the title + subtitle without clipping
 
         // Title
         JPanel titleGroup = new JPanel();
@@ -748,9 +887,8 @@ public class MetricsDashboard {
         JPanel btns = new JPanel(new FlowLayout(FlowLayout.RIGHT, SP_SM, 0));
         btns.setOpaque(false);
 
-        // ── Theme toggle button ──
-        String themeText = isDarkTheme ? "Light" : "Dark";
-        JButton themeBtn = styledButton(themeText, isDarkTheme ? YELLOW : PURPLE);
+        // ── Theme toggle button (same style as Export CSV / Reset All) ──
+        JButton themeBtn = styledButton(isDarkTheme ? "Light Mode" : "Dark Mode", isDarkTheme ? YELLOW : ORANGE);
         themeBtn.setToolTipText("Switch to " + (isDarkTheme ? "light" : "dark") + " theme");
         themeBtn.addActionListener(e -> toggleTheme());
 
@@ -780,23 +918,24 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  STATS STRIP
+    // STATS STRIP
     // ═══════════════════════════════════════════════════════════════════
 
-    private static JPanel buildStats(JLabel m, JLabel i, JLabel e, JLabel u) {
+    private static JPanel buildStats(JLabel m, JLabel i, JLabel e, JLabel u, MemoryBar memBar) {
         JPanel strip = new JPanel(new GridLayout(1, 4, SP_MD, 0));
         strip.setOpaque(false);
         strip.setBorder(BorderFactory.createEmptyBorder(SP_SM, SP_LG, SP_SM, SP_LG));
-        strip.add(statCard("METHODS TRACKED", m, BLUE));
-        strip.add(statCard("TOTAL INVOCATIONS", i, CYAN));
-        strip.add(statCard("TOTAL ERRORS", e, RED));
-        strip.add(statCard("UPTIME", u, PURPLE));
+        strip.add(statCard("\u26A1 METHODS TRACKED", m, BLUE, null));
+        strip.add(statCard("\uD83D\uDD01 TOTAL INVOCATIONS", i, CYAN, null));
+        strip.add(statCard("\u274C TOTAL ERRORS", e, RED, null));
+        strip.add(statCard("\u23F1 UPTIME", u, PURPLE, memBar));
         return strip;
     }
 
-    private static JPanel statCard(String label, JLabel valLabel, Color accent) {
+    private static JPanel statCard(String label, JLabel valLabel, Color accent, MemoryBar memBar) {
         JPanel card = new JPanel(new BorderLayout(0, SP_XS)) {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = gfx(g);
                 g2.setColor(SURFACE_2);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), RADIUS_MD, RADIUS_MD));
@@ -805,12 +944,12 @@ public class MetricsDashboard {
                 g2.fill(new RoundRectangle2D.Float(0, 0, 4, getHeight(), 4, 4));
                 // Border
                 g2.setColor(BORDER_0);
-                g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth()-1, getHeight()-1, RADIUS_MD, RADIUS_MD));
+                g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth() - 1, getHeight() - 1, RADIUS_MD, RADIUS_MD));
                 g2.dispose();
             }
         };
         card.setOpaque(false);
-        card.setBorder(BorderFactory.createEmptyBorder(SP_MD, SP_LG+SP_XS, SP_MD, SP_LG));
+        card.setBorder(BorderFactory.createEmptyBorder(SP_MD, SP_LG + SP_XS, SP_MD, SP_LG));
 
         JLabel lbl = new JLabel(label);
         lbl.setFont(FONT_STAT_LABEL);
@@ -820,7 +959,19 @@ public class MetricsDashboard {
         valLabel.setForeground(accent);
 
         card.add(lbl, BorderLayout.NORTH);
-        card.add(valLabel, BorderLayout.SOUTH);
+        if (memBar != null) {
+            JPanel bottom = new JPanel();
+            bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
+            bottom.setOpaque(false);
+            valLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            memBar.setAlignmentX(Component.LEFT_ALIGNMENT);
+            bottom.add(valLabel);
+            bottom.add(Box.createVerticalStrut(SP_XS));
+            bottom.add(memBar);
+            card.add(bottom, BorderLayout.SOUTH);
+        } else {
+            card.add(valLabel, BorderLayout.SOUTH);
+        }
         return card;
     }
 
@@ -832,7 +983,7 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  TABLE TAB (search bar + table)
+    // TABLE TAB (search bar + table)
     // ═══════════════════════════════════════════════════════════════════
 
     private static JPanel buildTableTab(MetricsTableModel model, String placeholder) {
@@ -852,14 +1003,15 @@ public class MetricsDashboard {
         icon.setForeground(TEXT_TERTIARY);
 
         JTextField field = new JTextField() {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (getText().isEmpty() && !hasFocus()) {
                     Graphics2D g2 = gfx(g);
                     g2.setFont(FONT_BODY);
                     g2.setColor(TEXT_TERTIARY);
                     Insets ins = getInsets();
-                    g2.drawString(placeholder, ins.left, getHeight()/2 + g2.getFontMetrics().getAscent()/2 - 1);
+                    g2.drawString(placeholder, ins.left, getHeight() / 2 + g2.getFontMetrics().getAscent() / 2 - 1);
                     g2.dispose();
                 }
             }
@@ -884,12 +1036,28 @@ public class MetricsDashboard {
         applyTableStyle(table, model);
 
         field.getDocument().addDocumentListener(new DocumentListener() {
-            void u() { model.setFilter(field.getText()); model.refreshData(); count.setText(model.getRowCount()+" results  "); }
-            @Override public void insertUpdate(DocumentEvent e) { u(); }
-            @Override public void removeUpdate(DocumentEvent e) { u(); }
-            @Override public void changedUpdate(DocumentEvent e){ u(); }
+            void u() {
+                model.setFilter(field.getText());
+                model.refreshData();
+                count.setText(model.getRowCount() + " results  ");
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                u();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                u();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                u();
+            }
         });
-        model.addTableModelListener(e -> count.setText(model.getRowCount()+" results  "));
+        model.addTableModelListener(e -> count.setText(model.getRowCount() + " results  "));
 
         JScrollPane scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createLineBorder(BORDER_0));
@@ -928,15 +1096,19 @@ public class MetricsDashboard {
         for (int i = 0; i < t.getColumnCount(); i++) {
             String n = t.getColumnName(i);
             int w = 95;
-            if ("Status".equals(n)) { w = 80; t.getColumnModel().getColumn(i).setMaxWidth(100); }
-            else if ("Method".equals(n)) w = 360;
-            else if ("Last Exception".equals(n)) w = 260;
+            if ("Status".equals(n)) {
+                w = 80;
+                t.getColumnModel().getColumn(i).setMaxWidth(100);
+            } else if ("Method".equals(n))
+                w = 360;
+            else if ("Last Exception".equals(n))
+                w = 260;
             t.getColumnModel().getColumn(i).setPreferredWidth(w);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  TRACES TAB
+    // TRACES TAB
     // ═══════════════════════════════════════════════════════════════════
 
     private static JPanel buildTracesTab() {
@@ -959,17 +1131,21 @@ public class MetricsDashboard {
                 setTextSelectionColor(isDarkTheme ? Color.WHITE : TEXT_PRIMARY);
                 setBorderSelectionColor(BLUE);
             }
-            @Override public Component getTreeCellRendererComponent(JTree tree, Object val,
+
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object val,
                     boolean sel, boolean exp, boolean leaf, int row, boolean focus) {
                 Component c = super.getTreeCellRendererComponent(tree, val, sel, exp, leaf, row, focus);
                 c.setFont(FONT_MONO);
                 String txt = val.toString();
                 if (txt.contains("ms") && !txt.startsWith("Call")) {
                     try {
-                        double d = Double.parseDouble(txt.substring(txt.lastIndexOf("(")+1, txt.lastIndexOf("ms")).trim());
+                        double d = Double
+                                .parseDouble(txt.substring(txt.lastIndexOf("(") + 1, txt.lastIndexOf("ms")).trim());
                         long thr = AgentConfig.getInstance().getSlowThresholdMs();
-                        setForeground(d > thr ? RED : d > thr*0.5 ? YELLOW : GREEN);
-                    } catch (Exception ignored) {}
+                        setForeground(d > thr ? RED : d > thr * 0.5 ? YELLOW : GREEN);
+                    } catch (Exception ignored) {
+                    }
                 }
                 return c;
             }
@@ -986,12 +1162,14 @@ public class MetricsDashboard {
             for (int i = 0; i < traces.size(); i++) {
                 CallNode t2 = traces.get(i);
                 DefaultMutableTreeNode n = new DefaultMutableTreeNode(
-                        String.format("#%d  %s (%.2fms) [%s]", i+1, t2.getMethodKey(), t2.getDurationMs(), t2.getThreadName()));
+                        String.format("#%d  %s (%.2fms) [%s]", i + 1, t2.getMethodKey(), t2.getDurationMs(),
+                                t2.getThreadName()));
                 addChildren(n, t2);
                 root.add(n);
             }
             ((DefaultTreeModel) tree.getModel()).reload();
-            for (int i = 0; i < Math.min(5, tree.getRowCount()); i++) tree.expandRow(i);
+            for (int i = 0; i < Math.min(5, tree.getRowCount()); i++)
+                tree.expandRow(i);
         });
 
         JPanel topBar = new JPanel(new BorderLayout());
@@ -1017,7 +1195,7 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  CONFIGURATION TAB
+    // CONFIGURATION TAB
     // ═══════════════════════════════════════════════════════════════════
 
     private static JPanel buildConfigTab() {
@@ -1038,7 +1216,9 @@ public class MetricsDashboard {
         AgentConfig cfg = AgentConfig.getInstance();
 
         // Section title
-        g.gridx=0; g.gridy=row; g.gridwidth=2;
+        g.gridx = 0;
+        g.gridy = row;
+        g.gridwidth = 2;
         JLabel title = new JLabel("Agent Configuration");
         title.setFont(FONT_H2);
         title.setForeground(TEXT_PRIMARY);
@@ -1046,19 +1226,21 @@ public class MetricsDashboard {
         row++;
 
         // Divider
-        g.gridy=row; g.gridwidth=2;
+        g.gridy = row;
+        g.gridwidth = 2;
         JPanel div = new JPanel();
         div.setPreferredSize(new Dimension(0, 1));
         div.setBackground(BORDER_0);
         card.add(div, g);
         row++;
 
-        g.gridwidth=1;
+        g.gridwidth = 1;
 
         // Enabled toggle
-        g.gridx=0; g.gridy=row;
+        g.gridx = 0;
+        g.gridy = row;
         card.add(cfgLabel("Instrumentation"), g);
-        g.gridx=1;
+        g.gridx = 1;
         JToggleButton toggle = new JToggleButton(cfg.isEnabled() ? "ENABLED" : "DISABLED");
         toggle.setSelected(cfg.isEnabled());
         toggle.setFont(FONT_BODY_BOLD);
@@ -1078,10 +1260,11 @@ public class MetricsDashboard {
         row++;
 
         // Threshold
-        g.gridx=0; g.gridy=row;
+        g.gridx = 0;
+        g.gridy = row;
         card.add(cfgLabel("Slow Threshold (ms)"), g);
-        g.gridx=1;
-        JSpinner spin = new JSpinner(new SpinnerNumberModel((int)cfg.getSlowThresholdMs(), 1, 10000, 10));
+        g.gridx = 1;
+        JSpinner spin = new JSpinner(new SpinnerNumberModel((int) cfg.getSlowThresholdMs(), 1, 10000, 10));
         spin.setFont(FONT_BODY);
         spin.setBackground(SURFACE_3);
         spin.setForeground(TEXT_PRIMARY);
@@ -1091,14 +1274,15 @@ public class MetricsDashboard {
 
         // Read-only fields
         String[][] info = {
-            {"Target Package", cfg.getTargetPackage()},
-            {"HTTP Endpoint", "http://localhost:" + cfg.getHttpPort() + "/metrics"},
-            {"Metrics Export Path", cfg.getMetricsExportPath()}
+                { "Target Package", cfg.getTargetPackage() },
+                { "HTTP Endpoint", "http://localhost:" + cfg.getHttpPort() + "/metrics" },
+                { "Metrics Export Path", cfg.getMetricsExportPath() }
         };
         for (String[] pair : info) {
-            g.gridx=0; g.gridy=row;
+            g.gridx = 0;
+            g.gridy = row;
             card.add(cfgLabel(pair[0]), g);
-            g.gridx=1;
+            g.gridx = 1;
             JLabel v = new JLabel(pair[1]);
             v.setFont(FONT_MONO);
             v.setForeground(CYAN);
@@ -1107,7 +1291,10 @@ public class MetricsDashboard {
         }
 
         // Endpoints card
-        g.gridx=0; g.gridy=row; g.gridwidth=2; g.insets = new Insets(SP_LG, SP_SM, SP_SM, SP_SM);
+        g.gridx = 0;
+        g.gridy = row;
+        g.gridwidth = 2;
+        g.insets = new Insets(SP_LG, SP_SM, SP_SM, SP_SM);
         card.add(buildEndpointsCard(cfg.getHttpPort()), g);
 
         outer.add(card, BorderLayout.NORTH);
@@ -1127,12 +1314,12 @@ public class MetricsDashboard {
         card.add(Box.createVerticalStrut(SP_SM));
 
         String[][] eps = {
-            {"GET", "/metrics",       "Full metrics JSON"},
-            {"GET", "/metrics/slow",  "Slow methods only"},
-            {"GET", "/metrics/traces","Recent call trees"},
-            {"GET", "/health",        "Health check"},
-            {"GET", "/config",        "Current configuration"},
-            {"POST","/config",        "Update configuration"},
+                { "GET", "/metrics", "Full metrics JSON" },
+                { "GET", "/metrics/slow", "Slow methods only" },
+                { "GET", "/metrics/traces", "Recent call trees" },
+                { "GET", "/health", "Health check" },
+                { "GET", "/config", "Current configuration" },
+                { "POST", "/config", "Update configuration" },
         };
         for (String[] ep : eps) {
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, SP_SM, 1));
@@ -1167,7 +1354,7 @@ public class MetricsDashboard {
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  CSV EXPORT
+    // CSV EXPORT
     // ═══════════════════════════════════════════════════════════════════
 
     private static void exportCsv(JFrame parent) {
@@ -1175,10 +1362,12 @@ public class MetricsDashboard {
         ch.setDialogTitle("Export Metrics as CSV");
         ch.setSelectedFile(new File("agent-metrics-export.csv"));
         ch.setFileFilter(new FileNameExtensionFilter("CSV Files (*.csv)", "csv"));
-        if (ch.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) return;
+        if (ch.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION)
+            return;
 
         File f = ch.getSelectedFile();
-        if (!f.getName().endsWith(".csv")) f = new File(f.getAbsolutePath()+".csv");
+        if (!f.getName().endsWith(".csv"))
+            f = new File(f.getAbsolutePath() + ".csv");
 
         try (BufferedWriter w = new BufferedWriter(new FileWriter(f))) {
             w.write("Method,Calls,Total (ms),Avg (ms),Min (ms),Max (ms),Errors,Error Rate (%),Last Exception");
@@ -1189,38 +1378,128 @@ public class MetricsDashboard {
                 w.write(String.format("\"%s\",%d,%.3f,%.3f,%.3f,%.3f,%d,%.2f,\"%s\"",
                         e.getKey(), m.getCallCount(), m.getTotalTimeMs(), m.getAverageTimeMs(),
                         m.getMinTimeMs(), m.getMaxTimeMs(), m.getErrorCount(),
-                        m.getErrorRate()*100, m.getLastExceptionType()));
+                        m.getErrorRate() * 100, m.getLastExceptionType()));
                 w.newLine();
             }
             JOptionPane.showMessageDialog(parent,
-                    "Exported "+snap.size()+" methods to:\n"+f.getAbsolutePath(),
+                    "Exported " + snap.size() + " methods to:\n" + f.getAbsolutePath(),
                     "Export Successful", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(parent,
-                    "Export failed: "+ex.getMessage(),
+                    "Export failed: " + ex.getMessage(),
                     "Export Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  FORMATTING HELPERS
+    // FORMATTING HELPERS
     // ═══════════════════════════════════════════════════════════════════
 
     private static String fmtNum(long n) {
-        if (n >= 1_000_000) return String.format("%.1fM", n/1_000_000.0);
-        if (n >= 1_000) return String.format("%.1fK", n/1_000.0);
+        if (n >= 1_000_000)
+            return String.format("%.1fM", n / 1_000_000.0);
+        if (n >= 1_000)
+            return String.format("%.1fK", n / 1_000.0);
         return String.valueOf(n);
     }
 
     private static String fmtUptime(long ms) {
-        long s = ms/1000;
-        if (s < 60) return s+"s";
-        if (s < 3600) return (s/60)+"m "+(s%60)+"s";
-        return (s/3600)+"h "+((s%3600)/60)+"m";
+        long s = ms / 1000;
+        if (s < 60)
+            return s + "s";
+        if (s < 3600)
+            return (s / 60) + "m " + (s % 60) + "s";
+        return (s / 3600) + "h " + ((s % 3600) / 60) + "m";
+    }
+
+    /**
+     * Strip package prefix from "com.foo.bar.ClassName#method" →
+     * "ClassName#method".
+     */
+    private static String truncateMethodName(String fullName) {
+        if (fullName == null)
+            return "";
+        // Handle "package.ClassName#method" format
+        int hashIdx = fullName.indexOf('#');
+        if (hashIdx < 0) {
+            // No # — just strip package from class name
+            int lastDot = fullName.lastIndexOf('.');
+            return lastDot >= 0 ? fullName.substring(lastDot + 1) : fullName;
+        }
+        String classPart = fullName.substring(0, hashIdx);
+        String methodPart = fullName.substring(hashIdx); // includes '#'
+        int lastDot = classPart.lastIndexOf('.');
+        String className = lastDot >= 0 ? classPart.substring(lastDot + 1) : classPart;
+        return className + methodPart;
+    }
+
+    /** Create a tab component with a text label and a rounded badge pill. */
+    private static JPanel createBadgeTabLabel(String title, int count, Color badgeBg, Color badgeFg) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
+        panel.setOpaque(false);
+        JLabel label = new JLabel(title);
+        label.setFont(FONT_BODY_BOLD);
+        label.setForeground(TEXT_PRIMARY);
+        panel.add(label);
+
+        JLabel badge = new JLabel(count > 0 ? String.valueOf(count) : "") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                String txt = getText();
+                if (txt != null && !txt.isEmpty()) {
+                    Graphics2D g2 = gfx(g);
+                    g2.setColor(badgeBg);
+                    g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(),
+                            getHeight(), getHeight()));
+                    g2.setFont(getFont());
+                    g2.setColor(badgeFg);
+                    FontMetrics fm = g2.getFontMetrics();
+                    int tx = (getWidth() - fm.stringWidth(txt)) / 2;
+                    int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                    g2.drawString(txt, tx, ty);
+                    g2.dispose();
+                }
+            }
+        };
+        badge.setFont(FONT_CAPTION_BOLD);
+        badge.setOpaque(false);
+        badge.setPreferredSize(count > 0 ? new Dimension(
+                badge.getFontMetrics(FONT_CAPTION_BOLD).stringWidth(String.valueOf(count)) + 14, 18)
+                : new Dimension(0, 0));
+        panel.add(badge);
+        panel.putClientProperty("badgeLabel", badge);
+        panel.putClientProperty("titleLabel", label);
+        return panel;
+    }
+
+    /** Update an existing badge tab label with a new count. */
+    private static void updateBadgeTabLabel(JTabbedPane tabs, int tabIndex,
+            String title, int count,
+            Color badgeBg, Color badgeFg) {
+        Component comp = tabs.getTabComponentAt(tabIndex);
+        if (!(comp instanceof JPanel))
+            return;
+        JPanel panel = (JPanel) comp;
+        JLabel badge = (JLabel) ((JPanel) comp).getClientProperty("badgeLabel");
+        JLabel titleLabel = (JLabel) ((JPanel) comp).getClientProperty("titleLabel");
+        if (badge == null || titleLabel == null)
+            return;
+
+        titleLabel.setForeground(TEXT_PRIMARY);
+        if (count > 0) {
+            badge.setText(String.valueOf(count));
+            badge.setPreferredSize(new Dimension(
+                    badge.getFontMetrics(FONT_CAPTION_BOLD).stringWidth(String.valueOf(count)) + 14, 18));
+        } else {
+            badge.setText("");
+            badge.setPreferredSize(new Dimension(0, 0));
+        }
+        panel.revalidate();
+        panel.repaint();
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    //  STANDALONE TEST
+    // STANDALONE TEST
     // ═══════════════════════════════════════════════════════════════════
 
     public static void main(String[] args) {
